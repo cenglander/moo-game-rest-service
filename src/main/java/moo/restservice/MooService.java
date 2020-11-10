@@ -54,8 +54,7 @@ public class MooService implements GameLogic {
 		for (int i = 0; i < cows; i++) {
 			feedback = feedback + "C";
 		}
-		GuessFeedbackPair guessFeedbackPair = new GuessFeedbackPair(guess, feedback);
-		guessFeedbackPairs.add(guessFeedbackPair);
+		addGuessFeedbackPairToList(guess, feedback);
 		return feedback;
 	}
 
@@ -66,6 +65,11 @@ public class MooService implements GameLogic {
 	
 	public List<GuessFeedbackPair> getGuessFeedbackPairs() {
 		return guessFeedbackPairs;
+	}
+	
+	private void addGuessFeedbackPairToList(String guess, String feedback) {
+		GuessFeedbackPair guessFeedbackPair = new GuessFeedbackPair(guess, feedback);
+		guessFeedbackPairs.add(guessFeedbackPair);
 	}
 
 }

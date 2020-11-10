@@ -29,14 +29,6 @@ public class MooController {
 		return ResponseEntity.accepted().
 				body(new GuessFeedbackPair(guess, mooService.checkGuess(answerKey, guess)));
 	}
-	
-//	@GetMapping("/adder/{i1}/{i2}")
-//	public UlfsInt add(@PathVariable("i1") int n, @PathVariable("i2") int m) {
-//		return new UlfsInt(adderService.add(n,m));
-//	}
-	
-	
-	
 
 
 }
