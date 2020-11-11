@@ -3,6 +3,12 @@ package moo.restservice;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
+
+import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.annotation.SessionScope;
 
@@ -10,10 +16,15 @@ import org.springframework.web.context.annotation.SessionScope;
 @SessionScope
 public class MooService implements GameLogic {
 
+	private String answerKey;
 	private List<GuessFeedbackPair> guessFeedbackPairs = new ArrayList<>();	
+	
+	@Autowired
+	Logger logger;
 
 	@Override
-	public String generateAnswerKey() {
+	@PostConstruct
+	public void generateAnswerKey() {
 		String answerKey = "";
 		String randomDigit = "";
 		int randomNum = 0;
@@ -25,7 +36,8 @@ public class MooService implements GameLogic {
 			} while (answerKey.contains(randomDigit));
 			answerKey = answerKey + randomDigit;
 		}
-		return answerKey;
+		logger.info(String.format("Facit: %s", answerKey));
+		this.answerKey = answerKey;
 	}
 
 	@Override
@@ -63,13 +75,17 @@ public class MooService implements GameLogic {
 		return !(answerKey.equalsIgnoreCase(guess));
 	}
 	
+	private void addGuessFeedbackPairToList(String guess, String feedback) {
+		GuessFeedbackPair guessFeedbackPair = new GuessFeedbackPair(guess, feedback);
+		guessFeedbackPairs.add(guessFeedbackPair);
+	}
+	
 	public List<GuessFeedbackPair> getGuessFeedbackPairs() {
 		return guessFeedbackPairs;
 	}
 	
-	private void addGuessFeedbackPairToList(String guess, String feedback) {
-		GuessFeedbackPair guessFeedbackPair = new GuessFeedbackPair(guess, feedback);
-		guessFeedbackPairs.add(guessFeedbackPair);
+	public String getAnswerKey() {
+		return answerKey;
 	}
 
 }

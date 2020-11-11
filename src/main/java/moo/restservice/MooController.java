@@ -14,20 +14,18 @@ public class MooController {
 	@Autowired
 	MooService mooService;
 	
-	String answerKey;
+//	String answerKey;
 	
 	@PostMapping("/moo/body")
 	public ResponseEntity<GuessFeedbackPair> guessFeedbackPairBody(@RequestBody String guess) {
-		answerKey = mooService.generateAnswerKey();
 		return ResponseEntity.accepted().
-				body(new GuessFeedbackPair(guess, mooService.checkGuess(answerKey, guess)));
+				body(new GuessFeedbackPair(guess, mooService.checkGuess(mooService.getAnswerKey(), guess)));
 	}
 	
 	@PostMapping("/moo/{guess}")
 	public ResponseEntity<GuessFeedbackPair> guessFeedbackPair(@PathVariable("guess") String guess) {
-		answerKey = mooService.generateAnswerKey();
 		return ResponseEntity.accepted().
-				body(new GuessFeedbackPair(guess, mooService.checkGuess(answerKey, guess)));
+				body(new GuessFeedbackPair(guess, mooService.checkGuess(mooService.getAnswerKey(), guess)));
 	}
 
 

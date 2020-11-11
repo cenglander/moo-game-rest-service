@@ -2,7 +2,7 @@ package moo.restservice;
 
 public interface GameLogic {
 
-	String generateAnswerKey();
+	void generateAnswerKey();
 
 	String checkGuess(String answerKey, String guess);
 
