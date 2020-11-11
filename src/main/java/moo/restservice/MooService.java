@@ -21,9 +21,13 @@ public class MooService implements GameLogic {
 	
 	@Autowired
 	Logger logger;
+	
+	public MooService() {
+		System.out.println("HEJ");
+	}
 
 	@Override
-	@PostConstruct
+	@PostConstruct							
 	public void generateAnswerKey() {
 		String answerKey = "";
 		String randomDigit = "";

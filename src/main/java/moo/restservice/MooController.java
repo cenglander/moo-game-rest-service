@@ -1,5 +1,7 @@
 package moo.restservice;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,9 +25,10 @@ public class MooController {
 	}
 	
 	@PostMapping("/moo/{guess}")
-	public ResponseEntity<GuessFeedbackPair> guessFeedbackPair(@PathVariable("guess") String guess) {
+	public ResponseEntity<List> guessFeedbackPair(@PathVariable("guess") String guess) {
+		new GuessFeedbackPair(guess, mooService.checkGuess(mooService.getAnswerKey(), guess));
 		return ResponseEntity.accepted().
-				body(new GuessFeedbackPair(guess, mooService.checkGuess(mooService.getAnswerKey(), guess)));
+				body(mooService.getGuessFeedbackPairs());
 	}
 
 
