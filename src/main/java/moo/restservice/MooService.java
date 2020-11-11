@@ -23,7 +23,7 @@ public class MooService implements GameLogic {
 	Logger logger;
 	
 	public MooService() {
-		System.out.println("HEJ");
+		System.out.println("HEJ från konstruktorn");
 	}
 
 	@Override
