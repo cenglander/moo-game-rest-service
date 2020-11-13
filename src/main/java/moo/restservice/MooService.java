@@ -79,6 +79,13 @@ public class MooService implements GameLogic {
 		return !(answerKey.equalsIgnoreCase(guess));
 	}
 	
+	public void resetIfCorrect(String guess) {
+		if (!isIncorrectGuess(answerKey, guess)) {
+			guessFeedbackPairs.clear();
+			generateAnswerKey();
+		}
+	}
+	
 	private void addGuessFeedbackPairToList(String guess, String feedback) {
 		GuessFeedbackPair guessFeedbackPair = new GuessFeedbackPair(guess, feedback);
 		guessFeedbackPairs.add(guessFeedbackPair);
