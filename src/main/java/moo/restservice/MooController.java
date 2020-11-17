@@ -5,9 +5,11 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 
@@ -16,6 +18,12 @@ public class MooController {
 	
 	@Autowired
 	MooService mooService;
+	
+	@Autowired
+	PlayerRepository playerRepository;
+	
+	@Autowired
+	ResultRepository resultRepository;
 
 	
 	@PostMapping("/moo/{guess}")
@@ -32,5 +40,21 @@ public class MooController {
 		return ResponseEntity.accepted().
 				body(mooService.getGuessFeedbackPairs());
 	}
+	
+	@GetMapping("/moo/all_players")
+	public @ResponseBody Iterable<Player> getAllPlayers() {
+		return playerRepository.findAll();
+	}
+	
+	@GetMapping("/moo/all_results")
+	public @ResponseBody Iterable<Result> getAllResults() {
+		return resultRepository.findAll();
+	}
+	
+	@GetMapping("/moo/login/{name}")
+	public @ResponseBody List<Player> findByPlayer(@PathVariable String name) {
+		return playerRepository.findByName(name);
+	}
+	
 
 }
