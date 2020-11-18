@@ -26,19 +26,12 @@ public class MooController {
 	ResultRepository resultRepository;
 
 	
-	@PostMapping("/moo/{guess}")
+	@PostMapping("/moo/id/{id}/guess/{guess}")
 	public ResponseEntity<List> guessFeedbackPair(@PathVariable("guess") String guess) {
 		new GuessFeedbackPair(guess, mooService.checkGuess(mooService.getAnswerKey(), guess));
 		List <GuessFeedbackPair> guessFeedbackPairs = new ArrayList<>(mooService.getGuessFeedbackPairs());
 		mooService.resetIfCorrect(guess);
 		return ResponseEntity.accepted().body(guessFeedbackPairs);
-	}
-	
-	@PostMapping("/moo/body")
-	public ResponseEntity<List> guessFeedbackPairBody(@RequestBody String guess) {
-		new GuessFeedbackPair(guess, mooService.checkGuess(mooService.getAnswerKey(), guess));
-		return ResponseEntity.accepted().
-				body(mooService.getGuessFeedbackPairs());
 	}
 	
 	@GetMapping("/moo/all_players")
@@ -52,9 +45,20 @@ public class MooController {
 	}
 	
 	@GetMapping("/moo/login/{name}")
-	public @ResponseBody List<Player> findByPlayer(@PathVariable String name) {
-		return playerRepository.findByName(name);
+	public @ResponseBody Integer findByPlayer(@PathVariable String name) {
+		List<Player> players = playerRepository.findByName(name);
+		Integer playerId = players.get(0).getId();
+		return playerId;
 	}
 	
+	
+	
+	
+	@PostMapping("/moo/body")
+	public ResponseEntity<List> guessFeedbackPairBody(@RequestBody String guess) {
+		new GuessFeedbackPair(guess, mooService.checkGuess(mooService.getAnswerKey(), guess));
+		return ResponseEntity.accepted().
+				body(mooService.getGuessFeedbackPairs());
+	}
 
 }
