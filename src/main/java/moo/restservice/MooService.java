@@ -7,8 +7,6 @@ import javax.annotation.PostConstruct;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.annotation.SessionScope;
 
@@ -17,13 +15,9 @@ import org.springframework.web.context.annotation.SessionScope;
 public class MooService implements GameLogic {
 
 	private String answerKey;
-
-	private Integer	numOfGuesses=0;
+	private Integer	numOfGuesses = 0;
 	private Integer playerId;
-	
-	
 	private List<GuessFeedbackPair> guessFeedbackPairs = new ArrayList<>();	
-	
 	
 	@Autowired
 	Logger logger;
