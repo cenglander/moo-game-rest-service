@@ -17,7 +17,13 @@ import org.springframework.web.context.annotation.SessionScope;
 public class MooService implements GameLogic {
 
 	private String answerKey;
+
+	private Integer	numOfGuesses=0;
+	private Integer playerId;
+	
+	
 	private List<GuessFeedbackPair> guessFeedbackPairs = new ArrayList<>();	
+	
 	
 	@Autowired
 	Logger logger;
@@ -71,6 +77,7 @@ public class MooService implements GameLogic {
 			feedback = feedback + "C";
 		}
 		addGuessFeedbackPairToList(guess, feedback);
+		numOfGuesses++;
 		return feedback;
 	}
 
@@ -82,6 +89,7 @@ public class MooService implements GameLogic {
 	public void resetIfCorrect(String guess) {
 		if (!isIncorrectGuess(answerKey, guess)) {
 			guessFeedbackPairs.clear();
+			setNumOfGuesses(0);
 			generateAnswerKey();
 		}
 	}
@@ -99,4 +107,19 @@ public class MooService implements GameLogic {
 		return answerKey;
 	}
 
+	public Integer getNumOfGuesses() {
+		return numOfGuesses;
+	}
+	
+	public void setNumOfGuesses(Integer numOfGuesses) {
+		this.numOfGuesses = numOfGuesses;
+	}
+	
+	public Integer getPlayerId() {
+		return playerId;
+	}
+	
+	public void setPlayerId(Integer playerId) {
+		this.playerId = playerId;
+	}
 }
