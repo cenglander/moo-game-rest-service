@@ -3,6 +3,8 @@ package moo.restservice;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Tuple;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,6 +26,15 @@ public class MooController {
 	@Autowired
 	ResultRepository resultRepository;
 
+	@GetMapping("/moo/login/{name}")
+	public @ResponseBody Integer findByPlayer(@PathVariable String name) {
+		List<Player> players = playerRepository.findByName(name);
+		Integer playerId = players.get(0).getId();
+		mooService.setPlayerId(playerId);
+		System.out.println(mooService.getPlayerId());
+		return playerId;
+	}
+
 	@PostMapping("/moo/{guess}")
 	public ResponseEntity<List> guessFeedbackPair(@PathVariable("guess") String guess) {
 		new GuessFeedbackPair(guess, mooService.checkGuess(mooService.getAnswerKey(), guess));
@@ -39,6 +50,24 @@ public class MooController {
 		return ResponseEntity.accepted().body(guessFeedbackPairs);
 	}
 
+//	@GetMapping("/moo/topTen")
+//	public @ResponseBody List<PlayerAverage> getTopTen() {
+//		List<PlayerAverage> topTen = playerRepository.getPlayerAverageTopTen();
+//		return topTen;
+//	}
+	
+	@GetMapping("/moo/topList")
+	public @ResponseBody List<PlayerAverage> getTopTen() {
+		List<PlayerAverage> topList = playerRepository.getTopList();
+		return topList;
+	}
+	
+//	@GetMapping("/moo/average")
+//	public @ResponseBody List<Double> getTotalAverage() {
+//		List<Double> averages = playerRepository.getAllPlayersAverage();
+//		return averages;
+//	}
+
 	@GetMapping("/moo/all_players")
 	public @ResponseBody Iterable<Player> getAllPlayers() {
 		return playerRepository.findAll();
@@ -48,22 +77,7 @@ public class MooController {
 	public @ResponseBody Iterable<Result> getAllResults() {
 		return resultRepository.findAll();
 	}
-
-	@GetMapping("/moo/login/{name}")
-	public @ResponseBody Integer findByPlayer(@PathVariable String name) {
-		List<Player> players = playerRepository.findByName(name);
-		Integer playerId = players.get(0).getId();
-		mooService.setPlayerId(playerId);
-		System.out.println(mooService.getPlayerId());
-		return playerId;
-	}
-
-//	@GetMapping("/moo/topTen")
-//	public @ResponseBody List<PlayerAverage> getTopTen() {
-//		List<PlayerAverage> topTen = playerRepository.getPlayerAverageTopTen();
-//		return topTen;
-//	}
-
+	
 	@PostMapping("/moo/body")
 	public ResponseEntity<List> guessFeedbackPairBody(@RequestBody String guess) {
 		new GuessFeedbackPair(guess, mooService.checkGuess(mooService.getAnswerKey(), guess));
