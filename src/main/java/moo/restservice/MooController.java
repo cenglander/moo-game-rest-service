@@ -11,10 +11,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("/moo")
 public class MooController {
 
 	@Autowired
@@ -26,7 +28,7 @@ public class MooController {
 	@Autowired
 	ResultRepository resultRepository;
 
-	@GetMapping("/moo/login/{name}")
+	@GetMapping("/login/{name}")
 	public @ResponseBody Integer findByPlayer(@PathVariable String name) {
 		List<Player> players = playerRepository.findByName(name);
 		Integer playerId = players.get(0).getId();
@@ -35,7 +37,7 @@ public class MooController {
 		return playerId;
 	}
 
-	@PostMapping("/moo/{guess}")
+	@PostMapping("/guess/{guess}")
 	public ResponseEntity<List> guessFeedbackPair(@PathVariable("guess") String guess) {
 		new GuessFeedbackPair(guess, mooService.checkGuess(mooService.getAnswerKey(), guess));
 		List<GuessFeedbackPair> guessFeedbackPairs = new ArrayList<>(mooService.getGuessFeedbackPairs());
@@ -50,35 +52,35 @@ public class MooController {
 		return ResponseEntity.accepted().body(guessFeedbackPairs);
 	}
 
-//	@GetMapping("/moo/topTen")
+//	@GetMapping("/topTen")
 //	public @ResponseBody List<PlayerAverage> getTopTen() {
 //		List<PlayerAverage> topTen = playerRepository.getPlayerAverageTopTen();
 //		return topTen;
 //	}
 	
-	@GetMapping("/moo/topList")
+	@GetMapping("/topList")
 	public @ResponseBody List<PlayerAverage> getTopTen() {
 		List<PlayerAverage> topList = playerRepository.getTopList();
 		return topList;
 	}
 	
-//	@GetMapping("/moo/average")
+//	@GetMapping("/average")
 //	public @ResponseBody List<Double> getTotalAverage() {
 //		List<Double> averages = playerRepository.getAllPlayersAverage();
 //		return averages;
 //	}
 
-	@GetMapping("/moo/all_players")
+	@GetMapping("/all_players")
 	public @ResponseBody Iterable<Player> getAllPlayers() {
 		return playerRepository.findAll();
 	}
 
-	@GetMapping("/moo/all_results")
+	@GetMapping("/all_results")
 	public @ResponseBody Iterable<Result> getAllResults() {
 		return resultRepository.findAll();
 	}
 	
-	@PostMapping("/moo/body")
+	@PostMapping("/body")
 	public ResponseEntity<List> guessFeedbackPairBody(@RequestBody String guess) {
 		new GuessFeedbackPair(guess, mooService.checkGuess(mooService.getAnswerKey(), guess));
 		return ResponseEntity.accepted().body(mooService.getGuessFeedbackPairs());

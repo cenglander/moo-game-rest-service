@@ -1,9 +1,6 @@
 package moo.restservice;
 
 import java.util.List;
-import java.util.Map;
-
-import javax.persistence.Tuple;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -18,7 +15,7 @@ public interface PlayerRepository extends JpaRepository<Player, Integer> {
 //		+ "GROUP BY Player.id ORDER BY average ASC")
 //	List<PlayerAverage> getPlayerAverageTopTen();
 //	
-//	
+	
 	@Query("SELECT new moo.restservice.PlayerAverage (p.id, avg(r.result) as average) " 
 		+ "FROM Player p "
 		+ "LEFT JOIN p.results r "
