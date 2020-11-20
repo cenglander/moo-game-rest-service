@@ -3,9 +3,9 @@ package moo.restservice;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.Tuple;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -51,24 +51,19 @@ public class MooController {
 		mooService.resetIfCorrect(guess);
 		return ResponseEntity.accepted().body(guessFeedbackPairs);
 	}
-
-//	@GetMapping("/topTen")
-//	public @ResponseBody List<PlayerAverage> getTopTen() {
-//		List<PlayerAverage> topTen = playerRepository.getPlayerAverageTopTen();
-//		return topTen;
-//	}
 	
 	@GetMapping("/topList")
-	public @ResponseBody List<PlayerAverage> getTopTen() {
-		List<PlayerAverage> topList = playerRepository.getTopList();
+	public @ResponseBody List<PlayerAverage> getPlayerTopList() {
+		Pageable pageable = PageRequest.of(0, 2);
+		List<PlayerAverage> topList = playerRepository.getTopList(pageable);
 		return topList;
 	}
 	
-//	@GetMapping("/average")
-//	public @ResponseBody List<Double> getTotalAverage() {
-//		List<Double> averages = playerRepository.getAllPlayersAverage();
-//		return averages;
-//	}
+	@GetMapping("/average")
+	public @ResponseBody List<Double> getTotalAverage() {
+		List<Double> averages = playerRepository.getAllPlayersAverage();
+		return averages;
+	}
 
 	@GetMapping("/all_players")
 	public @ResponseBody Iterable<Player> getAllPlayers() {
