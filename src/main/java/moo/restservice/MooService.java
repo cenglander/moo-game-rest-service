@@ -19,6 +19,7 @@ public class MooService implements GameLogic {
 	private Integer playerId;
 	private List<GuessFeedbackPair> guessFeedbackPairs = new ArrayList<>();	
 	
+	
 	@Autowired
 	Logger logger;
 	
