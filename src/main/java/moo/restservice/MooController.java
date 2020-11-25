@@ -58,7 +58,7 @@ public class MooController {
 		List<PlayerAverage> topList = playerRepository.getTopList(pageable);
 		return topList;
 	}
-	
+//////////////////////////////////////////////////////////////////////////////////
 	@GetMapping("/average")
 	public @ResponseBody List<Double> getTotalAverage() {
 		List<Double> averages = playerRepository.getAllPlayersAverage();
