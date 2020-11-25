@@ -11,12 +11,20 @@ import javax.persistence.Table;
 public class Result {
 	
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+//	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue
 	private int id;
 	
 	private int result;
 	
-	private int player;
+//	private int player;
+
+//	public Result(Integer result) {
+	public Result(int result) {
+		this.result = result;
+	}
+	
+	public Result() {}
 
 	public int getId() {
 		return id;
@@ -34,11 +42,11 @@ public class Result {
 		this.result = result;
 	}
 
-	public int getPlayer() {
-		return player;
-	}
-
-	public void setPlayer(int player) {
-		this.player = player;
-	}
+//	public int getPlayer() {
+//		return player;
+//	}
+//
+//	public void setPlayer(int player) {
+//		this.player = player;
+//	}
 }

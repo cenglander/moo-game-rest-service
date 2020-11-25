@@ -1,11 +1,11 @@
 package moo.restservice;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/moo")
-public class MooController {
+public class MooRestController {
 
 	@Autowired
 	MooService mooService;
@@ -29,34 +29,28 @@ public class MooController {
 	ResultRepository resultRepository;
 
 	@GetMapping("/login/{name}")
-	public @ResponseBody Integer findByPlayer(@PathVariable String name) {
-		List<Player> players = playerRepository.findByName(name);
-		Integer playerId = players.get(0).getId();
-		mooService.setPlayerId(playerId);
-		System.out.println(mooService.getPlayerId());
-		return playerId;
+	public ResponseEntity<String> findPlayerByName(@PathVariable String name) {
+		if (mooService.login(name)) {
+			return ResponseEntity.accepted().body("You are logged in");
+		} else {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Please register an account");
+		}
 	}
 
 	@PostMapping("/guess/{guess}")
 	public ResponseEntity<List> guessFeedbackPair(@PathVariable("guess") String guess) {
-		new GuessFeedbackPair(guess, mooService.checkGuess(mooService.getAnswerKey(), guess));
-		List<GuessFeedbackPair> guessFeedbackPairs = new ArrayList<>(mooService.getGuessFeedbackPairs());
-		System.out.println("num of guesses: " + mooService.getNumOfGuesses() + "\tid: " + mooService.getPlayerId());
-		if (!mooService.isIncorrectGuess(mooService.getAnswerKey(), guess)) {
-			Result result = new Result();
-			result.setPlayer(mooService.getPlayerId());
-			result.setResult(mooService.getNumOfGuesses());
-			resultRepository.save(result);
+		List<GuessFeedbackPair> guessFeedbackPairs = mooService.handleGuess(guess);
+		if (guessFeedbackPairs != null) {
+			return ResponseEntity.accepted().body(guessFeedbackPairs);
+		} else {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 		}
-		mooService.resetIfCorrect(guess);
-		return ResponseEntity.accepted().body(guessFeedbackPairs);
 	}
 	
 	@GetMapping("/topList")
 	public @ResponseBody List<PlayerAverage> getPlayerTopList() {
-		Pageable pageable = PageRequest.of(0, 2);
-		List<PlayerAverage> topList = playerRepository.getTopList(pageable);
-		return topList;
+		List<PlayerAverage> topTen = playerRepository.getTopTen();
+		return topTen;
 	}
 //////////////////////////////////////////////////////////////////////////////////
 	@GetMapping("/average")

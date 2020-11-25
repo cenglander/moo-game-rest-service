@@ -15,17 +15,32 @@ import org.springframework.web.context.annotation.SessionScope;
 public class MooService implements GameLogic {
 
 	private String answerKey;
-	private Integer	numOfGuesses = 0;
-	private Integer playerId;
+	private int	numOfGuesses = 0;
+	private Player player;
+	private boolean isLoggedIn;
 	private List<GuessFeedbackPair> guessFeedbackPairs = new ArrayList<>();	
 	
 	@Autowired
 	Logger logger;
 	
+	@Autowired
+	PlayerRepository playerRepository;
+	
 	public MooService() {
 		System.out.println("HEJ från konstruktorn");
 	}
 
+	public boolean login(String name) {
+		List<Player> players = playerRepository.findByName(name);
+		if (players.size() > 0) {
+			player = players.get(0);
+			isLoggedIn = true;
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
 	@Override
 	@PostConstruct							
 	public void generateAnswerKey() {
@@ -44,6 +59,16 @@ public class MooService implements GameLogic {
 		this.answerKey = answerKey;
 	}
 
+	public List<GuessFeedbackPair> handleGuess(String guess) {
+		if (!isLoggedIn) return null;
+		String feedback = checkGuess(getAnswerKey(), guess);
+		guessFeedbackPairs.add(new GuessFeedbackPair(guess, feedback));
+		List<GuessFeedbackPair> temp = new ArrayList<>(guessFeedbackPairs);
+		numOfGuesses++;
+		resetIfCorrect(guess);
+		return temp;
+	}
+	
 	@Override
 	public String checkGuess(String answerKey, String guess) {
 		int cows = 0, bulls = 0;
@@ -58,7 +83,7 @@ public class MooService implements GameLogic {
 						}
 					}
 				} catch (StringIndexOutOfBoundsException e) {
-					throw new StringIndexOutOfBoundsException("MooLogic - Error in checkBullsCows()" + e);
+					throw new StringIndexOutOfBoundsException("MooService - Error in checkGuess()" + e);
 				}
 			}
 		}
@@ -70,27 +95,28 @@ public class MooService implements GameLogic {
 		for (int i = 0; i < cows; i++) {
 			feedback = feedback + "C";
 		}
-		addGuessFeedbackPairToList(guess, feedback);
-		numOfGuesses++;
 		return feedback;
 	}
-
+	
 	@Override
-	public boolean isIncorrectGuess(String answerKey, String guess) {
-		return !(answerKey.equalsIgnoreCase(guess));
+	public boolean isCorrectGuess(String answerKey, String guess) {
+		return answerKey.equalsIgnoreCase(guess);
 	}
 	
 	public void resetIfCorrect(String guess) {
-		if (!isIncorrectGuess(answerKey, guess)) {
+		if (isCorrectGuess(answerKey, guess)) {
+			registerResult();
 			guessFeedbackPairs.clear();
 			setNumOfGuesses(0);
 			generateAnswerKey();
 		}
 	}
 	
-	private void addGuessFeedbackPairToList(String guess, String feedback) {
-		GuessFeedbackPair guessFeedbackPair = new GuessFeedbackPair(guess, feedback);
-		guessFeedbackPairs.add(guessFeedbackPair);
+	private void registerResult() {
+		logger.info(String.format("PlayerId: %s", player.getId()));
+		logger.info(String.format("NumOfGuesses: %s", numOfGuesses));
+		player.addResult(numOfGuesses);
+		playerRepository.save(player);	
 	}
 	
 	public List<GuessFeedbackPair> getGuessFeedbackPairs() {
@@ -101,19 +127,19 @@ public class MooService implements GameLogic {
 		return answerKey;
 	}
 
-	public Integer getNumOfGuesses() {
+	public int getNumOfGuesses() {
 		return numOfGuesses;
 	}
 	
-	public void setNumOfGuesses(Integer numOfGuesses) {
+	public void setNumOfGuesses(int numOfGuesses) {
 		this.numOfGuesses = numOfGuesses;
 	}
 	
-	public Integer getPlayerId() {
-		return playerId;
-	}
-	
-	public void setPlayerId(Integer playerId) {
-		this.playerId = playerId;
-	}
+//	public Integer getPlayerId() {
+//		return playerId;
+//	}
+//	
+//	public void setPlayerId(Integer playerId) {
+//		this.playerId = playerId;
+//	}
 }

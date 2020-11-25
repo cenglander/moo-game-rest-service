@@ -6,6 +6,6 @@ public interface GameLogic {
 
 	String checkGuess(String answerKey, String guess);
 
-	boolean isIncorrectGuess(String answerKey, String guess);
+	boolean isCorrectGuess(String answerKey, String guess);
 
 }
