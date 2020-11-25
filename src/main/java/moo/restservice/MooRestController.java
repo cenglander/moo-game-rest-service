@@ -3,8 +3,6 @@ package moo.restservice;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,9 +29,9 @@ public class MooRestController {
 	@GetMapping("/login/{name}")
 	public ResponseEntity<String> findPlayerByName(@PathVariable String name) {
 		if (mooService.login(name)) {
-			return ResponseEntity.accepted().body("You are logged in");
+			return ResponseEntity.accepted().body("You are now logged in and may proceed to play.");
 		} else {
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Please register an account");
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Please register an account.");
 		}
 	}
 
@@ -47,7 +45,7 @@ public class MooRestController {
 		}
 	}
 	
-	@GetMapping("/topList")
+	@GetMapping("/toplist")
 	public @ResponseBody List<PlayerAverage> getPlayerTopList() {
 		List<PlayerAverage> topTen = playerRepository.getTopTen();
 		return topTen;

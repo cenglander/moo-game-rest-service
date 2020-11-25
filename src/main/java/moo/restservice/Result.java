@@ -19,7 +19,6 @@ public class Result {
 	
 //	private int player;
 
-//	public Result(Integer result) {
 	public Result(int result) {
 		this.result = result;
 	}

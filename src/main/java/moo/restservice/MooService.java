@@ -87,6 +87,10 @@ public class MooService implements GameLogic {
 				}
 			}
 		}
+		return generateFeedback(cows, bulls);
+	}
+
+	private String generateFeedback(int cows, int bulls) {
 		String feedback = "";
 		for (int i = 0; i < bulls; i++) {
 			feedback = feedback + "B";
@@ -114,6 +118,7 @@ public class MooService implements GameLogic {
 	
 	private void registerResult() {
 		logger.info(String.format("PlayerId: %s", player.getId()));
+		logger.info(String.format("PlayerName: %s", player.getName()));
 		logger.info(String.format("NumOfGuesses: %s", numOfGuesses));
 		player.addResult(numOfGuesses);
 		playerRepository.save(player);	
@@ -134,12 +139,5 @@ public class MooService implements GameLogic {
 	public void setNumOfGuesses(int numOfGuesses) {
 		this.numOfGuesses = numOfGuesses;
 	}
-	
-//	public Integer getPlayerId() {
-//		return playerId;
-//	}
-//	
-//	public void setPlayerId(Integer playerId) {
-//		this.playerId = playerId;
-//	}
+
 }
