@@ -4,12 +4,15 @@ public class GuessFeedbackPair {
 
 	private String guess;
 	private String feedback;
-	
+
+	public GuessFeedbackPair() {
+	}
+
 	public GuessFeedbackPair(String guess, String feedback) {
 		this.guess = guess;
 		this.feedback = feedback;
 	}
-	
+
 	public String getGuess() {
 		return guess;
 	}
@@ -17,5 +20,5 @@ public class GuessFeedbackPair {
 	public String getFeedback() {
 		return feedback;
 	}
-	
+
 }
