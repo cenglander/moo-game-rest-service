@@ -37,7 +37,7 @@ public class MooRestController {
 
 	@PostMapping("/guess/{guess}")
 	public ResponseEntity<List> guessFeedbackPair(@PathVariable("guess") String guess) {
-		List<GuessFeedbackPair> guessFeedbackPairs = mooService.handleGuess(guess);
+		List<GuessFeedbackPair> guessFeedbackPairs = mooService.handleGuess(new Guess(guess));
 		if (guessFeedbackPairs != null) {
 			return ResponseEntity.accepted().body(guessFeedbackPairs);
 		} else {
@@ -68,7 +68,8 @@ public class MooRestController {
 	}
 	
 	@PostMapping("/body")
-	public ResponseEntity<List> guessFeedbackPairBody(@RequestBody String guess) {
+	public ResponseEntity<List> guessFeedbackPairBody(@RequestBody String input) {
+		Guess guess=new Guess(input);
 		new GuessFeedbackPair(guess, mooService.checkGuess(mooService.getAnswerKey(), guess));
 		return ResponseEntity.accepted().body(mooService.getGuessFeedbackPairs());
 	}

@@ -25,7 +25,7 @@ public class Player {
 	
 //	@OneToMany(mappedBy="player", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn(name="player")
+	@JoinColumn(name="player", nullable = false)
 	private List<Result> results;
 
 	public void addResult(int numOfGuesses) {
