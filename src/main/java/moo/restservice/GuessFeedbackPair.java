@@ -2,18 +2,18 @@ package moo.restservice;
 
 public class GuessFeedbackPair {
 
-	private Guess guess;
+	private String guess;
 	private String feedback;
 
 	public GuessFeedbackPair() {
 	}
 
-	public GuessFeedbackPair(Guess guess, String feedback) {
+	public GuessFeedbackPair(String guess, String feedback) {
 		this.guess = guess;
 		this.feedback = feedback;
 	}
 
-	public Guess getGuess() {
+	public String getGuess() {
 		return guess;
 	}
 

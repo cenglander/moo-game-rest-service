@@ -2,22 +2,13 @@ package moo.restservice;
 
 public class PlayerAverage {
 	
-//	private int playerId;
-	private String name;
+	private String player;
 	private double averageResult;
 
 	public PlayerAverage(String name, double averageResult) {
-		this.name = name;
+		this.player = name;
 		this.averageResult = averageResult;
 	}
-
-//	public int getPlayerId() {
-//		return playerId;
-//	}
-//
-//	public void setPlayerId(int playerId) {
-//		this.playerId = playerId;
-//	}
 
 	public double getAverageResult() {
 		return averageResult;
@@ -27,14 +18,12 @@ public class PlayerAverage {
 		this.averageResult = averageResult;
 	}
 
-	public String getName() {
-		return name;
+	public String getPlayer() {
+		return player;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setPlayer(String name) {
+		this.player = name;
 	}
 	
-	
-
 }

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>Top Ten</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+
+<body>
+	<h3>Top Ten List</h3>
+	<table>
+		<thead>
+			<tr>
+				<th>Player</th>
+				<th>Average</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="r : ${topTenList}">
+				<td th:text="${r.getPlayer()}" />
+				<td th:text="${r.getAverageResult()}" />
+		</tbody>
+	</table>
+	
+	<!-- <a href="/moo/web/play">Back to game</a> -->
+</body>
+
+</html>

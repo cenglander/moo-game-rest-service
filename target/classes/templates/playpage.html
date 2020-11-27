@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>Play Moo</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+
+<body>
+	<h3>Play Moo</h3>
+	<p th:text="|Welcome, you are logged in as ${player}|" />
+	<table>
+		<thead>
+			<tr>
+				<th>Guess</th>
+				<th>Feedback</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="pair : ${guessFeedbackPairs}">
+				<td th:text="${pair.guess}" />
+				<td th:text="${pair.feedback}" />
+		</tbody>
+	</table>
+
+	<form action="#" th:action="@{/moo/web/play}" th:object="${guessFormBean}" method="post">
+		<p> Make your guess:
+			<input type="text" th:field="*{guess}" required minlength=4 maxlength=4 />
+		</p>
+		<p>
+			<input type="submit" value="Guess!" />
+		</p>
+		<a href="/moo/web/topten">See Top ten list</a>
+	</form> 
+</body>
+
+</html>

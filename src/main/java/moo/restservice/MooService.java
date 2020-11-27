@@ -2,6 +2,7 @@ package moo.restservice;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.annotation.PostConstruct;
 
@@ -59,24 +60,23 @@ public class MooService implements GameLogic {
 		this.answerKey = answerKey;
 	}
 
-	public List<GuessFeedbackPair> handleGuess(Guess guess) {
-		if (!isLoggedIn)
-			return null;
+	public Optional<List<GuessFeedbackPair>> handleGuess(String guess) {
+		if (!isLoggedIn) return Optional.empty();
 		String feedback = checkGuess(getAnswerKey(), guess);
 		guessFeedbackPairs.add(new GuessFeedbackPair(guess, feedback));
 		List<GuessFeedbackPair> temp = new ArrayList<>(guessFeedbackPairs);
 		numOfGuesses++;
 		resetIfCorrect(guess);
-		return temp;
+		return Optional.of(temp);
 	}
 
 	@Override
-	public String checkGuess(String answerKey, Guess guess) {
+	public String checkGuess(String answerKey, String guess) {
 		int cows = 0, bulls = 0;
 		for (int i = 0; i < answerKey.length(); i++) {
 			for (int j = 0; j < answerKey.length(); j++) {
 				try {
-					if (answerKey.charAt(i) == guess.getValue().charAt(j)) {
+					if (answerKey.charAt(i) == guess.charAt(j)) {
 						if (i == j) {
 							bulls++;
 						} else {
@@ -104,11 +104,11 @@ public class MooService implements GameLogic {
 	}
 
 	@Override
-	public boolean isCorrectGuess(String answerKey, Guess guess) {
-		return answerKey.equalsIgnoreCase(guess.getValue());
+	public boolean isCorrectGuess(String answerKey, String guess) {
+		return answerKey.equalsIgnoreCase(guess);
 	}
 
-	public void resetIfCorrect(Guess guess) {
+	public void resetIfCorrect(String guess) {
 		if (isCorrectGuess(answerKey, guess)) {
 			registerResult();
 			guessFeedbackPairs.clear();
@@ -118,13 +118,14 @@ public class MooService implements GameLogic {
 	}
 
 	private void registerResult() {
-		logger.info(String.format("PlayerId: %s", player.getId()));
-		logger.info(String.format("PlayerName: %s", player.getName()));
-		logger.info(String.format("NumOfGuesses: %s", numOfGuesses));
 		player.addResult(numOfGuesses);
 		playerRepository.save(player);
 	}
 
+	public List<PlayerAverage> getTopTen() {
+		return playerRepository.getTopTen();
+	}
+	
 	public List<GuessFeedbackPair> getGuessFeedbackPairs() {
 		return guessFeedbackPairs;
 	}
@@ -141,4 +142,12 @@ public class MooService implements GameLogic {
 		this.numOfGuesses = numOfGuesses;
 	}
 
+	public Player getPlayer() {
+		return player;
+	}
+
+	public void setPlayer(Player player) {
+		this.player = player;
+	}
+	
 }

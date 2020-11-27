@@ -1,6 +1,7 @@
 package moo.restservice;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -8,13 +9,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+//import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
-@RequestMapping("/moo")
+@RequestMapping("/moo/rest")
 public class MooRestController {
 
 	@Autowired
@@ -36,8 +37,8 @@ public class MooRestController {
 	}
 
 	@PostMapping("/guess/{guess}")
-	public ResponseEntity<List> guessFeedbackPair(@PathVariable("guess") String guess) {
-		List<GuessFeedbackPair> guessFeedbackPairs = mooService.handleGuess(new Guess(guess));
+	public ResponseEntity<Optional<List<GuessFeedbackPair>>> guessFeedbackPair(@PathVariable("guess") String guess) {
+		Optional<List<GuessFeedbackPair>> guessFeedbackPairs = mooService.handleGuess(guess);
 		if (guessFeedbackPairs != null) {
 			return ResponseEntity.accepted().body(guessFeedbackPairs);
 		} else {
@@ -47,10 +48,11 @@ public class MooRestController {
 	
 	@GetMapping("/toplist")
 	public @ResponseBody List<PlayerAverage> getPlayerTopList() {
-		List<PlayerAverage> topTen = playerRepository.getTopTen();
+		List<PlayerAverage> topTen = mooService.getTopTen();
 		return topTen;
 	}
 //////////////////////////////////////////////////////////////////////////////////
+// Methods below are not used atm
 	@GetMapping("/average")
 	public @ResponseBody List<Double> getTotalAverage() {
 		List<Double> averages = playerRepository.getAllPlayersAverage();
@@ -67,11 +69,10 @@ public class MooRestController {
 		return resultRepository.findAll();
 	}
 	
-	@PostMapping("/body")
-	public ResponseEntity<List> guessFeedbackPairBody(@RequestBody String input) {
-		Guess guess=new Guess(input);
-		new GuessFeedbackPair(guess, mooService.checkGuess(mooService.getAnswerKey(), guess));
-		return ResponseEntity.accepted().body(mooService.getGuessFeedbackPairs());
-	}
+//	@PostMapping("/body")
+//	public ResponseEntity<List> guessFeedbackPairBody(@RequestBody String guess) {
+//		new GuessFeedbackPair(guess, mooService.checkGuess(mooService.getAnswerKey(), guess));
+//		return ResponseEntity.accepted().body(mooService.getGuessFeedbackPairs());
+//	}
 
 }
